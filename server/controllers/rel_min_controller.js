@@ -2,20 +2,8 @@
 const relMinCtrl = {};
 const client  = require('../database/connectiondb');
 
-relMinCtrl.getRelMineral = async (req, res) => {
-    await client.query("SELECT * FROM Relacion-Min;")
-        .then(response => {
-            res.json(response.rows);
-        })
-        .catch(err => {
-            console.log(err);
-            res.json('Ha ocurrido un error');
-        })
-};
-
 relMinCtrl.getRelMinerales = async (req, res) => {
-    const id = req.params.id;
-    await client.query("SELECT rm_nombre AS Nombre, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion-Min WHERE mi_id = "+id+";")
+    await client.query("SELECT rm_cantidad AS rm_cantidad, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion_Min;")
         .then(response => {
             res.json(response.rows);
         })
@@ -25,9 +13,33 @@ relMinCtrl.getRelMinerales = async (req, res) => {
         })
 };
 
-relMinCtrl.createRelMineral = async (req, res) => {
-    const min = req.body;
-    await client.query("INSERT INTO Rel-Mineral (rm) VALUES ('"+min.nombre+"','"+min.tipo+"','"+min.descripcion+"')")
+relMinCtrl.getRelMineralesExtraidos = async (req, res) => {
+    const id = req.params.id;
+    await client.query("SELECT rm_cantidad AS rm_cantidad, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion_Min WHERE fk_mi_id_1 ="+id)
+        .then(response => {
+            res.json(response.rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.json('Ha ocurrido un error');
+        })
+};
+
+relMinCtrl.getRelMineralesExtraedores = async (req, res) => {
+    const id = req.params.id;
+    await client.query("SELECT rm_cantidad AS rm_cantidad, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion_Min WHERE fk_mi_id_2 ="+id)
+        .then(response => {
+            res.json(response.rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.json('Ha ocurrido un error');
+        })
+};
+
+relMinCtrl.createRelMin = async (req, res) => {
+    const rel = req.body;
+    await client.query("INSERT INTO Relacion_Min (rm_cantidad, fk_mi_id_1, fk_mi_id_2) VALUES ("+rel.cantidad+","+rel.extraedor+","+rel.extraido+")")
         .then(response => {
             res.json('Insertado');
         })
@@ -37,10 +49,10 @@ relMinCtrl.createRelMineral = async (req, res) => {
         })
 };
 
-relMinCtrl.editMineral = async (req, res) => {
+relMinCtrl.editRelMin = async (req, res) => {
     const id = req.params.id;
     const min = req.body;
-    await client.query("UPDATE Mineral SET mi_nombre ='"+min.nombre+"', mi_tipo ='"+min.tipo+"', mi_descripcion = '"+min.descripcion+"' WHERE mi_id = "+id+";")
+    await client.query("UPDATE Relacion_Min SET rm_cantidad ="+min.cantidad+", fk_mi_id_1 ="+min.extraedor+", fk_mi_id_2 ="+min.extraido+" WHERE rm_id ="+id)
         .then(response => {
             res.json('Actualizado');
         })
@@ -50,11 +62,11 @@ relMinCtrl.editMineral = async (req, res) => {
         })
 };
 
-relMinCtrl.deleteMineral = async (req, res) => {
+relMinCtrl.deleteRelMin = async (req, res) => {
     const id = req.params.id;
-    await client.query("DELETE FROM Mineral WHERE mi_id = "+id+";")
+    await client.query("DELETE FROM Relacion_Min WHERE rm_id = "+id+";")
         .then(response => {
-            res.json('Mineral eliminado');
+            res.json('Relacion eliminada');
         })
         .catch(err => {
             console.log(err);
