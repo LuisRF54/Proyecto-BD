@@ -1,8 +1,9 @@
+//en desarrollo
 const relMinCtrl = {};
 const client  = require('../database/connectiondb');
 
-relMinCtrl.getMinerales = async (req, res) => {
-    await client.query("SELECT * FROM Mineral;")
+relMinCtrl.getRelMineral = async (req, res) => {
+    await client.query("SELECT * FROM Relacion-Min;")
         .then(response => {
             res.json(response.rows);
         })
@@ -12,9 +13,9 @@ relMinCtrl.getMinerales = async (req, res) => {
         })
 };
 
-relMinCtrl.getMineral = async (req, res) => {
+relMinCtrl.getRelMinerales = async (req, res) => {
     const id = req.params.id;
-    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo FROM Mineral WHERE mi_id = "+id+";")
+    await client.query("SELECT rm_nombre AS Nombre, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion-Min WHERE mi_id = "+id+";")
         .then(response => {
             res.json(response.rows);
         })
@@ -24,9 +25,9 @@ relMinCtrl.getMineral = async (req, res) => {
         })
 };
 
-relMinCtrl.createMineral = async (req, res) => {
+relMinCtrl.createRelMineral = async (req, res) => {
     const min = req.body;
-    await client.query("INSERT INTO Mineral (mi_nombre, mi_tipo, mi_descripcion) VALUES ('"+min.nombre+"','"+min.tipo+"','"+min.descripcion+"')")
+    await client.query("INSERT INTO Rel-Mineral (rm) VALUES ('"+min.nombre+"','"+min.tipo+"','"+min.descripcion+"')")
         .then(response => {
             res.json('Insertado');
         })

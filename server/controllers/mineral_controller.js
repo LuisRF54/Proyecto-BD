@@ -24,9 +24,33 @@ mineralCtrl.getMineral = async (req, res) => {
         })
 };
 
-mineralCtrl.createMineral = async (req, res) => {
+mineralCtrl.getMetales = async (req, res) => {
+    const id = req.params.id;
+    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo, mi_descripcion AS Descripcion, mi_conductividad AS Conductividad FROM Mineral WHERE mi_tipo = 'Metal';")
+        .then(response => {
+            res.json(response.rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.json('Ha ocurrido un error');
+        })
+};
+
+mineralCtrl.getNoMetales = async (req, res) => {
+    const id = req.params.id;
+    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo, mi_descripcion AS Descripcion, mi_estado AS Estado FROM Mineral WHERE mi_tipo = 'No Metal';")
+        .then(response => {
+            res.json(response.rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.json('Ha ocurrido un error');
+        })
+};
+
+mineralCtrl.createMetal = async (req, res) => {
     const min = req.body;
-    await client.query("INSERT INTO Mineral (mi_nombre, mi_tipo, mi_descripcion) VALUES ('"+min.nombre+"','"+min.tipo+"','"+min.descripcion+"')")
+    await client.query("INSERT INTO Mineral (mi_nombre, mi_tipo, mi_descripcion, mi_conductividad) VALUES ('"+min.nombre+"','Metal','"+min.descripcion+"','"+min.conductividad+"')")
         .then(response => {
             res.json('Insertado');
         })
@@ -36,10 +60,35 @@ mineralCtrl.createMineral = async (req, res) => {
         })
 };
 
-mineralCtrl.editMineral = async (req, res) => {
+mineralCtrl.createNoMetal = async (req, res) => {
+    const min = req.body;
+    await client.query("INSERT INTO Mineral (mi_nombre, mi_tipo, mi_descripcion, mi_estado) VALUES ('"+min.nombre+"','No Metal','"+min.descripcion+"','"+min.estado+"')")
+        .then(response => {
+            res.json('Insertado');
+        })
+        .catch(err => {
+            console.log(err);
+            res.json('Ha ocurrido un error');
+        })
+};
+
+mineralCtrl.editMetal = async (req, res) => {
     const id = req.params.id;
     const min = req.body;
-    await client.query("UPDATE Mineral SET mi_nombre ='"+min.nombre+"', mi_tipo ='"+min.tipo+"', mi_descripcion = '"+min.descripcion+"' WHERE mi_id = "+id+";")
+    await client.query("UPDATE Mineral SET mi_nombre ='"+min.nombre+"', mi_descripcion = '"+min.descripcion+"', mi_conductividad = '"+min.conductividad+"' WHERE mi_id = "+id+";")
+        .then(response => {
+            res.json('Actualizado');
+        })
+        .catch(err => {
+            console.log(err);
+            res.json('Ha ocurrido un error');
+        })
+};
+
+mineralCtrl.editNoMetal = async (req, res) => {
+    const id = req.params.id;
+    const min = req.body;
+    await client.query("UPDATE Mineral SET mi_nombre ='"+min.nombre+"', mi_descripcion = '"+min.descripcion+"', mi_estado = '"+min.estado+"' WHERE mi_id = "+id+";")
         .then(response => {
             res.json('Actualizado');
         })
