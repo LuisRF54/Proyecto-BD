@@ -1,4 +1,3 @@
-//en desarrollo
 const relMinCtrl = {};
 const client  = require('../database/connectiondb');
 
