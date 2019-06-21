@@ -6,6 +6,7 @@ const routes_yacimiento = require('./routes/yacimiento_routes');
 const routes_aliado = require('./routes/aliado_routes');
 const routes_lugar = require('./routes/lugar_routes');
 const routes_tipo_pago = require('./routes/tipo_pago_routes');
+const routes_cliente = require('./routes/cliente_routes');
 const cors = require('cors');
 //----------initializations-----------------
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api/yacimiento',routes_yacimiento);
 app.use('/api/aliado',routes_aliado);
 app.use('/api/lugar',routes_lugar);
 app.use('/api/tipopago',routes_tipo_pago);
+app.use('/api/cliente',routes_cliente);
 
 //----------------starting the server----------------------
 app.listen(app.get('port'), () => {
