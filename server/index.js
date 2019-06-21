@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const routes_mineral = require('./routes/mineral_routes');
 const routes_rel_min = require('./routes/rel_min_routes');
 const routes_yacimiento = require('./routes/yacimiento_routes');
+const routes_aliado = require('./routes/aliado_routes');
 const cors = require('cors');
 //----------initializations-----------------
 const app = express();
@@ -18,6 +19,7 @@ app.use(cors({origin : 'http://localhost:4200'}));
 app.use('/api/mineral',routes_mineral);
 app.use('/api/relmin',routes_rel_min);
 app.use('/api/yacimiento',routes_yacimiento);
+app.use('/api/aliado',routes_aliado);
 
 //----------------starting the server----------------------
 app.listen(app.get('port'), () => {
