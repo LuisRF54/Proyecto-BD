@@ -4,7 +4,10 @@ const client = require('../database/connectiondb');
 clCtrl.getClientes = async (req,res) => {
     await client.query("SELECT cl_nombre AS Nombre, cl_apellido AS Apellido, cl_telefono AS Telefono, fk_l_clave AS Lugar FROM Cliente")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -16,7 +19,10 @@ clCtrl.getCliente = async (req,res) => {
     const id = req.params.id;
     await client.query("SELECT cl_nombre AS Nombre, cl_apellido AS Apellido, cl_telefono AS Telefono, fk_l_clave AS Lugar FROM Cliente WHERE cl_id = "+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);

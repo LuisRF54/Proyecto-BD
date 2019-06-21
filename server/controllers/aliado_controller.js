@@ -4,7 +4,10 @@ const client = require('../database/connectiondb');
 aliCtrl.getAliados = async (req, res) => {
     await client.query("SELECT ali_nombre AS nombre, ali_fecha_creacion AS creacion, ali_fecha_inaguracion AS inaguracion, fk_l_clave AS lugar FROM Aliado")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -16,7 +19,10 @@ aliCtrl.getAliado = async (req, res) => {
     const id = req.params.id;
     await client.query("SELECT ali_nombre AS nombre, ali_fecha_creacion AS creacion, ali_fecha_inaguracion AS inaguracion, fk_l_clave AS lugar FROM Aliado WHERE ali_id ="+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);

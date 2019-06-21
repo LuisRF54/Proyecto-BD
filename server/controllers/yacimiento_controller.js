@@ -4,7 +4,10 @@ const client  = require('../database/connectiondb');
 yacCtrl.getYacimientos = async (req, res) => {
     await client.query("SELECT * FROM Yacimiento")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -15,7 +18,10 @@ yacCtrl.getYacimientos = async (req, res) => {
 yacCtrl.getAutoctonos = async (req, res) => {
     await client.query("SELECT y_nombre AS Nombre, y_tamaño AS Tamaño, y_origen AS Origen, fk_l_clave AS Lugar FROM Yacimiento WHERE y_tipo = 'Autoctono'")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -26,7 +32,10 @@ yacCtrl.getAutoctonos = async (req, res) => {
 yacCtrl.getAloctonos = async (req, res) => {
     await client.query("SELECT y_nombre AS Nombre, y_tamaño AS Tamaño, y_tipo_transporte AS Tipo_transporte, fk_l_clave AS Lugar FROM Yacimiento WHERE y_tipo = 'Aloctono'")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);

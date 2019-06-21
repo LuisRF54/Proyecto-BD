@@ -4,7 +4,10 @@ const client  = require('../database/connectiondb');
 relMinCtrl.getRelMinerales = async (req, res) => {
     await client.query("SELECT rm_cantidad AS rm_cantidad, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion_Min;")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -16,7 +19,10 @@ relMinCtrl.getRelMineralesExtraidos = async (req, res) => {
     const id = req.params.id;
     await client.query("SELECT rm_cantidad AS rm_cantidad, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion_Min WHERE fk_mi_id_1 ="+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -28,7 +34,10 @@ relMinCtrl.getRelMineralesExtraedores = async (req, res) => {
     const id = req.params.id;
     await client.query("SELECT rm_cantidad AS rm_cantidad, fk_mi_id_1 AS Extraedor, fk_mi_id_2 AS Extraido FROM Relacion_Min WHERE fk_mi_id_2 ="+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);

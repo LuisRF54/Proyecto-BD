@@ -4,7 +4,10 @@ const client  = require('../database/connectiondb');
 tipoPagoCtrl.getTipoPagos = async (req, res) => {
     await client.query("SELECT * FROM Tipo_Pago")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -15,7 +18,10 @@ tipoPagoCtrl.getTipoPagos = async (req, res) => {
 tipoPagoCtrl.getTransferencias = async (req, res) => {
     await client.query("SELECT tp_banco AS Banco, tp_fecha AS Fecha FROM Tipo_Pago WHERE tp_tipo = 'Transferencia'")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -27,7 +33,10 @@ tipoPagoCtrl.getTransferencia = async (req, res) => {
     const id = req.params.id;
     await client.query("SELECT tp_banco AS Banco, tp_fecha AS Fecha FROM Tipo_Pago WHERE tp_tipo = 'Transferencia' AND tp_numero ="+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -38,7 +47,10 @@ tipoPagoCtrl.getTransferencia = async (req, res) => {
 tipoPagoCtrl.getTarsCredito = async (req, res) => {
     await client.query("SELECT tp_banco AS Banco, tp_tipo_tar_cre AS Tipo, tp_fecha_vencimiento AS Vencimiento FROM Tipo_Pago WHERE tp_tipo = 'Tar_credito'")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -50,7 +62,10 @@ tipoPagoCtrl.getTarCredito = async (req, res) => {
     const id = req.params.id;
     await client.query("SELECT tp_banco AS Banco, tp_tipo_tar_cre AS Tipo, tp_fecha_vencimiento AS Vencimiento FROM Tipo_Pago WHERE tp_tipo = 'Tar_credito' AND tp_numero ="+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -61,7 +76,10 @@ tipoPagoCtrl.getTarCredito = async (req, res) => {
 tipoPagoCtrl.getCheques = async (req, res) => {
     await client.query("SELECT tp_banco AS Banco, tp_numero_cuenta AS \"Nro. Cuenta\" FROM Tipo_Pago WHERE tp_tipo = 'Cheque'")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -73,7 +91,10 @@ tipoPagoCtrl.getCheque = async (req, res) => {
     const id = req.params.id;
     await client.query("SELECT tp_banco AS Banco, tp_numero_cuenta AS \"Nro. Cuenta\" FROM Tipo_Pago WHERE tp_tipo = 'Cheque' AND tp_numero ="+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -84,7 +105,10 @@ tipoPagoCtrl.getCheque = async (req, res) => {
 tipoPagoCtrl.getTarsDebito = async (req, res) => {
     await client.query("SELECT tp_banco AS Banco, tp_tipo_tar_deb AS Tipo FROM Tipo_Pago WHERE tp_tipo = 'Tar_debito'")
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
@@ -96,7 +120,10 @@ tipoPagoCtrl.getTarDebito = async (req, res) => {
     const id = req.params.id;
     await client.query("SELECT tp_banco AS Banco, tp_tipo_tar_deb AS Tipo FROM Tipo_Pago WHERE tp_tipo = 'Tar_debito' AND tp_numero ="+id)
         .then(response => {
-            res.json(response.rows);
+            if(response.rowCount)
+                res.json(response.rows);
+            else
+                res.json('Sin resultados');
         })
         .catch(err => {
             console.log(err);
