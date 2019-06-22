@@ -9,6 +9,9 @@ const routes_tipo_pago = require('./routes/tipo_pago_routes');
 const routes_cliente = require('./routes/cliente_routes');
 const routes_privilegio = require('./routes/privilegio_routes');
 const routes_yac_min = require('./routes/yac_min_routes');
+const routes_almacen = require('./routes/almacen_routes');
+const routes_presentacion = require('./routes/presentacion_routes');
+const routes_min_pre = require('./routes/min_pre_routes');
 const cors = require('cors');
 //----------initializations-----------------
 const app = express();
@@ -30,6 +33,9 @@ app.use('/api/tipopago',routes_tipo_pago);
 app.use('/api/cliente',routes_cliente);
 app.use('/api/privilegio',routes_privilegio);
 app.use('/api/yacmin',routes_yac_min);
+app.use('/api/almacen',routes_almacen);
+app.use('/api/presentacion',routes_presentacion);
+app.use('/api/minpre',routes_min_pre);
 
 //----------------starting the server----------------------
 app.listen(app.get('port'), () => {
