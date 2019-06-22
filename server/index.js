@@ -13,6 +13,8 @@ const routes_almacen = require('./routes/almacen_routes');
 const routes_presentacion = require('./routes/presentacion_routes');
 const routes_min_pre = require('./routes/min_pre_routes');
 const routes_turno = require('./routes/turno_routes');
+const routes_orden_venta = require('./routes/orden_venta_routes');
+const routes_orden_compra = require('./routes/orden_compra_routes');
 const cors = require('cors');
 //----------initializations-----------------
 const app = express();
@@ -38,6 +40,8 @@ app.use('/api/almacen',routes_almacen);
 app.use('/api/presentacion',routes_presentacion);
 app.use('/api/minpre',routes_min_pre);
 app.use('/api/turno',routes_turno);
+app.use('/api/ordenventa',routes_orden_venta);
+app.use('/api/ordencompra',routes_orden_compra);
 
 //----------------starting the server----------------------
 app.listen(app.get('port'), () => {
