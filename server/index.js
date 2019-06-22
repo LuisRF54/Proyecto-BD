@@ -12,6 +12,7 @@ const routes_yac_min = require('./routes/yac_min_routes');
 const routes_almacen = require('./routes/almacen_routes');
 const routes_presentacion = require('./routes/presentacion_routes');
 const routes_min_pre = require('./routes/min_pre_routes');
+const routes_turno = require('./routes/turno_routes');
 const cors = require('cors');
 //----------initializations-----------------
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/yacmin',routes_yac_min);
 app.use('/api/almacen',routes_almacen);
 app.use('/api/presentacion',routes_presentacion);
 app.use('/api/minpre',routes_min_pre);
+app.use('/api/turno',routes_turno);
 
 //----------------starting the server----------------------
 app.listen(app.get('port'), () => {

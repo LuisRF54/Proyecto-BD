@@ -152,7 +152,7 @@ CREATE TABLE Turno(
     t_id            SERIAL,
     t_hora_inicio   TIME NOT NULL,
     t_hora_fin      TIME NOT NULL,
-    t_dia           VARCHAR(10) NOT NULL,
+    t_dia           VARCHAR(10) NOT NULL CHECK (t_dia IN ('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo')),
     CONSTRAINT PK_Turno PRIMARY KEY (t_id)
 );
 
