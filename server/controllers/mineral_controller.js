@@ -2,7 +2,7 @@ const mineralCtrl = {};
 const client  = require('../database/connectiondb');
 
 mineralCtrl.getMinerales = async (req, res) => {
-    await client.query("SELECT * FROM Mineral;")
+    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo, mi_descripcion AS Descripcion, mi_conductividad AS Conductividad, mi_estado AS Estado FROM Mineral ORDER BY mi_nombre")
         .then(response => {
             if(response.rowCount)
                 res.json(response.rows);
@@ -32,7 +32,7 @@ mineralCtrl.getMineral = async (req, res) => {
 
 mineralCtrl.getMetales = async (req, res) => {
     const id = req.params.id;
-    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo, mi_descripcion AS Descripcion, mi_conductividad AS Conductividad FROM Mineral WHERE mi_tipo = 'Metal';")
+    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo, mi_descripcion AS Descripcion, mi_conductividad AS Conductividad FROM Mineral WHERE mi_tipo = 'Metal' ORDER BY mi_nombre")
         .then(response => {
             if(response.rowCount)
                 res.json(response.rows);
@@ -47,7 +47,7 @@ mineralCtrl.getMetales = async (req, res) => {
 
 mineralCtrl.getNoMetales = async (req, res) => {
     const id = req.params.id;
-    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo, mi_descripcion AS Descripcion, mi_estado AS Estado FROM Mineral WHERE mi_tipo = 'No Metal';")
+    await client.query("SELECT mi_nombre AS Nombre, mi_tipo AS Tipo, mi_descripcion AS Descripcion, mi_estado AS Estado FROM Mineral WHERE mi_tipo = 'No Metal' ORDER BY mi_nombre")
         .then(response => {
             if(response.rowCount)
                 res.json(response.rows);

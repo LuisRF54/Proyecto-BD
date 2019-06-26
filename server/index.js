@@ -15,6 +15,11 @@ const routes_min_pre = require('./routes/min_pre_routes');
 const routes_turno = require('./routes/turno_routes');
 const routes_orden_venta = require('./routes/orden_venta_routes');
 const routes_orden_compra = require('./routes/orden_compra_routes');
+const routes_empleado = require('./routes/empleado_routes');
+const routes_usuario = require('./routes/usuario_routes');
+const routes_explotacion = require('./routes/explotacion_routes');
+const routes_cargo = require('./routes/cargo_routes');
+const routes_rol = require('./routes/rol_routes');
 const cors = require('cors');
 //----------initializations-----------------
 const app = express();
@@ -42,6 +47,11 @@ app.use('/api/minpre',routes_min_pre);
 app.use('/api/turno',routes_turno);
 app.use('/api/ordenventa',routes_orden_venta);
 app.use('/api/ordencompra',routes_orden_compra);
+app.use('/api/empleado',routes_empleado);
+app.use('/api/usuario',routes_usuario);
+app.use('/api/explotacion',routes_explotacion);
+app.use('/api/cargo',routes_cargo);
+app.use('/api/rol',routes_rol);
 
 //----------------starting the server----------------------
 app.listen(app.get('port'), () => {

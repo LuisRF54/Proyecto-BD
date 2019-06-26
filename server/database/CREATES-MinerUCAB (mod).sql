@@ -1,59 +1,59 @@
----------------DATABASE CREATES MINERUCAB-------------------------------
+﻿---------------DATABASE CREATES MINERUCAB-------------------------------
 CREATE TABLE Mineral(
     mi_id               SERIAL,
-    mi_nombre           VARCHAR(10) NOT NULL,
+    mi_nombre           VARCHAR(25) NOT NULL,
     mi_tipo             VARCHAR(15) NOT NULL CHECK (mi_tipo IN ('Metal','No Metal')),
-    mi_descripcion      VARCHAR(30), 
+    mi_descripcion      VARCHAR(100), 
     mi_conductividad    VARCHAR(12),
-    mi_estado           VARCHAR(8),   
+    mi_estado           VARCHAR(8) CHECK (mi_estado IN ('Solido', 'Liquido', 'Gaseoso')),
+    mi_costo            NUMERIC(10,2)   NOT NULL,
     CONSTRAINT PK_Mineral PRIMARY KEY (mi_id)
 );
-
 CREATE TABLE Relacion_Min(
 	rm_id		SERIAL,
-    rm_cantidad NUMERIC(5) NOT NULL,
+	rm_cantidad	INTEGER NOT NULL,
 	fk_mi_id_1	INTEGER	NOT NULL,
 	fk_mi_id_2	INTEGER	NOT NULL,
 	CONSTRAINT PK_rel_min PRIMARY KEY (rm_id),
 	CONSTRAINT FK_rm_min_1 FOREIGN KEY (fk_mi_id_1)
-	REFERENCES Mineral (mi_id),
+	REFERENCES Mineral (mi_id) ON DELETE CASCADE,
 	CONSTRAINT FK_rm_min_2 FOREIGN KEY (fk_mi_id_2)
-	REFERENCES Mineral (mi_id)
+	REFERENCES Mineral (mi_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Lugar(
 	l_clave		SERIAL,
-	l_nombre	VARCHAR(30)	NOT NULL,
+	l_nombre	VARCHAR(80)	NOT NULL,
 	l_tipo		VARCHAR(10)	NOT NULL CHECK (l_tipo = 'Estado' OR l_tipo = 'Municipio' OR l_tipo = 'Parroquia'),
 	fk_l_clave	INTEGER,
 	CONSTRAINT PK_lugar PRIMARY KEY (l_clave),
 	CONSTRAINT FK_l_lugar FOREIGN KEY (fk_l_clave)
-	REFERENCES Lugar (l_clave)
+	REFERENCES Lugar (l_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Yacimiento(
     y_id        SERIAL,
     y_nombre    VARCHAR(15) NOT NULL,
-    y_tamaño    NUMERIC(5)  NOT NULL,
+    y_tamaño    NUMERIC(15)  NOT NULL,
     y_tipo      VARCHAR(9)  NOT NULL CHECK (y_tipo = 'Aloctono' OR y_tipo = 'Autoctono'),
     y_origen    VARCHAR(30) CHECK (y_origen IN ('Terrestre','Acuatico')),
     Y_tipo_transporte   VARCHAR(30) CHECK (y_tipo_transporte IN ('Viento','Agua','Deslizamientos')),
     fk_l_clave  INTEGER NOT NULL,
     CONSTRAINT PK_Yacimiento PRIMARY KEY (y_id),
     CONSTRAINT FK_y_l_clave FOREIGN KEY (fk_l_clave)
-    REFERENCES Lugar (l_clave)  
+    REFERENCES Lugar (l_clave)  ON DELETE CASCADE
 );
 
 CREATE  TABLE Aliado(
     ali_id                  SERIAL,
-    ali_nombre              VARCHAR(20) NOT NULL,
+    ali_nombre              VARCHAR(40) NOT NULL,
     ali_fecha_creacion      DATE    NOT NULL,
     ali_fecha_inaguracion   DATE    NOT NULL,
     ali_descripcion         VARCHAR(30),
     fk_l_clave              INTEGER NOT NULL,
     CONSTRAINT PK_Aliado PRIMARY KEY (ali_id),
     CONSTRAINT FK_ali_l_clave FOREIGN KEY (fk_l_clave)
-    REFERENCES Lugar (l_clave)
+    REFERENCES Lugar (l_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Almacen(
@@ -65,6 +65,7 @@ CREATE TABLE Almacen(
 CREATE TABLE Presentacion(
     pre_clave       SERIAL,
     pre_tipo        VARCHAR(20) NOT NULL,
+    pre_cantidad    INTEGER NOT NULL,
     pre_descripcion VARCHAR(30),
     CONSTRAINT PK_Presentacion PRIMARY KEY (pre_clave)
 );
@@ -77,7 +78,7 @@ CREATE TABLE Cliente(
     fk_l_clave  INTEGER  NOT NULL,
     CONSTRAINT PK_Cliente PRIMARY KEY (cl_id),
     CONSTRAINT FK_cl_l_clave FOREIGN KEY (fk_l_clave)
-    REFERENCES Lugar (l_clave)
+    REFERENCES Lugar (l_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Yac_Min(
@@ -86,9 +87,9 @@ CREATE TABLE Yac_Min(
     fk_y_id     INTEGER NOT NULL,
     CONSTRAINT PK_Yac_Min PRIMARY KEY (ym_id),
     CONSTRAINT FK_ym_mi_id FOREIGN KEY (fk_mi_id)
-    REFERENCES Mineral (mi_id),
+    REFERENCES Mineral (mi_id) ON DELETE CASCADE,
     CONSTRAINT FK_ym_y_id FOREIGN KEY (fk_y_id)
-    REFERENCES Yacimiento (y_id)
+    REFERENCES Yacimiento (y_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Privilegio(
@@ -109,30 +110,30 @@ CREATE TABLE Rol_Pri(
     fk_r_clave  INTEGER NOT NULL,
     CONSTRAINT PK_Rol_Pri PRIMARY KEY (rp_clave),
     CONSTRAINT FK_rp_pri_clave FOREIGN KEY (fk_pri_clave)
-    REFERENCES Privilegio (pri_clave),
+    REFERENCES Privilegio (pri_clave) ON DELETE CASCADE,
     CONSTRAINT FK_rp_r_clave FOREIGN KEY (fk_r_clave)
-    REFERENCES Rol (r_clave)
+    REFERENCES Rol (r_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Cargo(
     ca_clave        SERIAL,
-    ca_nombre       VARCHAR(20) NOT NULL,
-    ca_descripcion  VARCHAR(20) NOT NULL,
+    ca_nombre       VARCHAR(50) NOT NULL,
+    ca_descripcion  VARCHAR(80) NOT NULL,
     CONSTRAINT PK_Cargo PRIMARY KEY (ca_clave)
 );
 
 CREATE TABLE Empleado(
     em_id       SERIAL,
-    em_nombre   VARCHAR(12) NOT NULL,
-    em_apellido VARCHAR(15) NOT NULL,
+    em_nombre   VARCHAR(30) NOT NULL,
+    em_apellido VARCHAR(30) NOT NULL,
     em_salario  NUMERIC(10) NOT NULL,
     fk_l_clave  INTEGER NOT NULL,
     fk_ca_clave INTEGER NOT NULL,
     CONSTRAINT PK_Empleado PRIMARY KEY (em_id),
     CONSTRAINT FK_em_l_clave FOREIGN KEY (fk_l_clave)
-    REFERENCES Lugar (l_clave),
+    REFERENCES Lugar (l_clave) ON DELETE CASCADE,
     CONSTRAINT FK_em_ca_clave FOREIGN KEY (fk_ca_clave)
-    REFERENCES Cargo (ca_clave)
+    REFERENCES Cargo (ca_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Usuario(
@@ -143,9 +144,9 @@ CREATE TABLE Usuario(
     fk_r_clave  INTEGER NOT NULL,
     CONSTRAINT PK_Usuario PRIMARY KEY (u_clave),
     CONSTRAINT FK_u_em_id FOREIGN KEY (fk_em_id)
-    REFERENCES Empleado (em_id),
+    REFERENCES Empleado (em_id) ON DELETE CASCADE,
     CONSTRAINT FK_u_r_clave FOREIGN KEY (fk_r_clave)
-    REFERENCES Rol (r_clave)
+    REFERENCES Rol (r_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Turno(
@@ -162,9 +163,9 @@ CREATE TABLE Emp_Turno(
     fk_t_id     INTEGER NOT NULL,
     CONSTRAINT PK_Emp_Turno PRIMARY KEY (et_id),
     CONSTRAINT FK_et_em_id  FOREIGN KEY (fk_em_id)
-    REFERENCES Empleado (em_id),
+    REFERENCES Empleado (em_id) ON DELETE CASCADE,
     CONSTRAINT FK_et_t_id FOREIGN KEY (fk_t_id)
-    REFERENCES Turno (t_id)
+    REFERENCES Turno (t_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Min_Pre(
@@ -174,9 +175,9 @@ CREATE TABLE Min_Pre(
     fk_pre_clave    INTEGER NOT NULL,
     CONSTRAINT PK_Min_Pre PRIMARY KEY (mp_id),
     CONSTRAINT FK_mp_mi_id FOREIGN KEY (fk_mi_id)
-    REFERENCES Mineral (mi_id),
+    REFERENCES Mineral (mi_id) ON DELETE CASCADE,
     CONSTRAINT FK_mp_pre_clave FOREIGN KEY (fk_pre_clave)
-    REFERENCES Presentacion (pre_clave)
+    REFERENCES Presentacion (pre_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Orden_Venta(
@@ -186,7 +187,7 @@ CREATE TABLE Orden_Venta(
     fk_cl_id        INTEGER NOT NULL,
     CONSTRAINT PK_Orden_Venta PRIMARY KEY (ov_numero),
     CONSTRAINT FK_ov_cl_id FOREIGN KEY (fk_cl_id)
-    REFERENCES Cliente (cl_id)
+    REFERENCES Cliente (cl_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Orden_Compra(
@@ -196,7 +197,7 @@ CREATE TABLE Orden_Compra(
     fk_ali_id        INTEGER NOT NULL,
     CONSTRAINT PK_Orden_Compra PRIMARY KEY (oc_numero),
     CONSTRAINT FK_oc_ali_id FOREIGN KEY (fk_ali_id)
-    REFERENCES Aliado (ali_id)
+    REFERENCES Aliado (ali_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Min_Pre_Ali(
@@ -207,9 +208,9 @@ CREATE TABLE Min_Pre_Ali(
     mpa_cantidad    INTEGER NOT NULL,
     CONSTRAINT PK_Min_Pre_Ali PRIMARY KEY (mpa_id),
     CONSTRAINT FK_mpa_mp_id FOREIGN KEY (fk_mp_id)
-    REFERENCES Min_Pre (mp_id),
+    REFERENCES Min_Pre (mp_id) ON DELETE CASCADE,
     CONSTRAINT FK_mpa_oc_numero FOREIGN KEY (fk_oc_numero)
-    REFERENCES Orden_Compra (oc_numero)
+    REFERENCES Orden_Compra (oc_numero) ON DELETE CASCADE
 );
 
 CREATE TABLE Estatus(
@@ -223,17 +224,24 @@ CREATE TABLE Min_Alm(
     ma_cantidad     INTEGER NOT NULL,
     fk_mp_id        INTEGER NOT NULL,
     fk_alm_clave    INTEGER NOT NULL,
-    fk_oc_numero    INTEGER,
-    fk_ov_numero    INTEGER,
     CONSTRAINT PK_Min_Alm PRIMARY KEY (ma_id),
     CONSTRAINT FK_ma_mp_id FOREIGN KEY (fk_mp_id)
-    REFERENCES Min_Pre (mp_id),
+    REFERENCES Min_Pre (mp_id) ON DELETE CASCADE,
     CONSTRAINT FK_ma_alm_clave FOREIGN KEY (fk_alm_clave)
-    REFERENCES Almacen (alm_clave),
-    CONSTRAINT FK_ma_oc_numero FOREIGN KEY (fk_oc_numero)
-    REFERENCES Orden_Compra (oc_numero),
-    CONSTRAINT FK_ma_ov_numero FOREIGN KEY (fk_ov_numero)
-    REFERENCES Orden_Venta (ov_numero)
+    REFERENCES Almacen (alm_clave) ON DELETE CASCADE
+);
+
+CREATE TABLE Movimiento(
+    mov_id          SERIAL,
+    mov_cantidad    NUMERIC(10,2) NOT NULL,
+    fk_ma_id        INTEGER NOT NULL,
+    fk_ov_numero    INTEGER,
+    fk_oc_numero    INTEGER,
+    CONSTRAINT PK_Movimiento PRIMARY KEY (mov_id),
+    CONSTRAINT FK_mov_oc_numero FOREIGN KEY (fk_oc_numero)
+    REFERENCES Orden_Compra (oc_numero) ON DELETE CASCADE,
+    CONSTRAINT FK_mov_ov_numero FOREIGN KEY (fk_ov_numero)
+    REFERENCES Orden_Venta (ov_numero) ON DELETE CASCADE
 );
 
 CREATE TABLE Fact_Mineral(
@@ -244,9 +252,9 @@ CREATE TABLE Fact_Mineral(
     fk_mp_id        INTEGER NOT NULL,
     CONSTRAINT PK_Fact_Mineral PRIMARY KEY (fm_id),
     CONSTRAINT FK_fm_ov_numero FOREIGN KEY (fk_ov_numero)
-    REFERENCES Orden_Venta (ov_numero),
+    REFERENCES Orden_Venta (ov_numero) ON DELETE CASCADE,
     CONSTRAINT FK_fm_mp_id FOREIGN KEY (fk_mp_id)
-    REFERENCES Min_Pre (mp_id)
+    REFERENCES Min_Pre (mp_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Tipo_Pago(
@@ -269,9 +277,9 @@ CREATE TABLE Pago(
     fk_ov_numero    INTEGER NOT NULL,
     CONSTRAINT PK_Pago PRIMARY KEY (pag_id),
     CONSTRAINT FK_pag_tp_numero FOREIGN KEY (fk_tp_numero)
-    REFERENCES Tipo_Pago (tp_numero),
+    REFERENCES Tipo_Pago (tp_numero) ON DELETE CASCADE,
     CONSTRAINT FK_pag_ov_numero FOREIGN KEY (fk_ov_numero)
-    REFERENCES Orden_Venta (ov_numero)
+    REFERENCES Orden_Venta (ov_numero) ON DELETE CASCADE
 );
 
 CREATE TABLE Explotacion(
@@ -282,25 +290,25 @@ CREATE TABLE Explotacion(
     fk_ov_numero    INTEGER,
     CONSTRAINT PK_Explotacion PRIMARY KEY (ex_id),
     CONSTRAINT FK_ex_ym_id FOREIGN KEY (fk_ym_id)
-    REFERENCES Yac_Min (ym_id),
+    REFERENCES Yac_Min (ym_id) ON DELETE CASCADE,
     CONSTRAINT FK_ex_ov_numero FOREIGN KEY (fk_ov_numero)
-    REFERENCES Orden_Venta (ov_numero)  
+    REFERENCES Orden_Venta (ov_numero) ON DELETE CASCADE
 );
 
 CREATE TABLE Etapa(
     eta_id          SERIAL,
-    eta_numero      INTEGER NOT NULL,
-    eta_nombre      VARCHAR(50) NOT NULL,
-    fk_ex_id        INTEGER NOT NULL,
+    eta_numero      INTEGER,
+    eta_nombre      VARCHAR(50),
+    fk_ex_id        INTEGER,
     eta_fecha_inicio DATE,
     CONSTRAINT PK_Etapa PRIMARY KEY (eta_id),
     CONSTRAINT FK_eta_ex_id FOREIGN KEY (fk_ex_id)
-    REFERENCES Explotacion (ex_id)
+    REFERENCES Explotacion (ex_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Fase_Conf(
     fc_clave            SERIAL,
-    fc_nombre           VARCHAR(200) NOT NULL,
+    fc_nombre           VARCHAR(150) NOT NULL,
     fc_dias_duracion    INTEGER NOT NULL,
     CONSTRAINT PK_Fase_Conf PRIMARY KEY (fc_clave)
 );
@@ -314,9 +322,7 @@ CREATE TABLE Fase(
     fk_fc_clave     INTEGER NOT NULL,
     CONSTRAINT PK_Fase PRIMARY KEY (f_id),
     CONSTRAINT FK_f_fc_clave FOREIGN KEY (fk_fc_clave)
-    REFERENCES Fase_Conf (fc_clave),
-    CONSTRAINT FK_f_eta_id FOREIGN KEY (fk_eta_id)
-    REFERENCES Etapa (eta_id)
+    REFERENCES Fase_Conf (fc_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Emp_Fase(
@@ -326,14 +332,14 @@ CREATE TABLE Emp_Fase(
     fk_em_id   INTEGER NOT NULL,
     CONSTRAINT PK_Emp_Fase PRIMARY KEY (ef_id),
     CONSTRAINT FK_ef_f_id FOREIGN KEY (fk_f_id)
-    REFERENCES Fase (f_id),
+    REFERENCES Fase (f_id) ON DELETE CASCADE,
     CONSTRAINT FK_ef_emp_id FOREIGN KEY (fk_em_id)
-    REFERENCES Empleado (em_id)
+    REFERENCES Empleado (em_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Tipo_Maquina(
     tm_id       SERIAL,
-    tm_nombre   VARCHAR(20) NOT NULL,
+    tm_nombre   VARCHAR(25) NOT NULL,
     CONSTRAINT PK_Tipo_Maquina PRIMARY KEY (tm_id)
 );
 
@@ -343,7 +349,7 @@ CREATE TABLE Maquina(
     fk_tm_id    INTEGER NOT NULL,
     CONSTRAINT PK_Maquina PRIMARY KEY (maq_id),
     CONSTRAINT FK_maq_tm_id FOREIGN KEY (fk_tm_id)
-    REFERENCES Tipo_Maquina (tm_id)
+    REFERENCES Tipo_Maquina (tm_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Fase_Maq(
@@ -353,9 +359,9 @@ CREATE TABLE Fase_Maq(
     fk_maq_id   INTEGER NOT NULL,
     CONSTRAINT PK_Fase_Maq PRIMARY KEY (fm_id),
     CONSTRAINT FK_fm_f_id FOREIGN KEY (fk_f_id)
-    REFERENCES Fase (f_id),
+    REFERENCES Fase (f_id) ON DELETE CASCADE,
     CONSTRAINT FK_fm_maq_id FOREIGN KEY (fk_maq_id)
-    REFERENCES Maquina (maq_id)
+    REFERENCES Maquina (maq_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Maq_Conf(
@@ -365,9 +371,9 @@ CREATE TABLE Maq_Conf(
     fk_fc_clave     INTEGER NOT NULL,
     CONSTRAINT PK_Maq_Conf PRIMARY KEY (mc_clave),
     CONSTRAINT FK_mc_tm_clave FOREIGN KEY (fk_tm_clave)
-    REFERENCES Tipo_Maquina (tm_id),
+    REFERENCES Tipo_Maquina (tm_id) ON DELETE CASCADE,
     CONSTRAINT FK_mc_fc_clave FOREIGN KEY (fk_fc_clave)
-    REFERENCES Fase_Conf (fc_clave)
+    REFERENCES Fase_Conf (fc_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Conf_Car(
@@ -377,9 +383,9 @@ CREATE TABLE Conf_Car(
     fk_ca_clave     INTEGER NOT NULL,
     CONSTRAINT PK_Conf_Car PRIMARY KEY (cc_clave),
     CONSTRAINT FK_cc_fc_clave FOREIGN KEY (fk_fc_clave)
-    REFERENCES Fase_Conf (fc_clave),
+    REFERENCES Fase_Conf (fc_clave) ON DELETE CASCADE,
     CONSTRAINT FK_cc_ca_clave FOREIGN KEY (fk_ca_clave)
-    REFERENCES Cargo (ca_clave)
+    REFERENCES Cargo (ca_clave) ON DELETE CASCADE
 );
 
 CREATE TABLE Est_Historico(
@@ -396,19 +402,19 @@ CREATE TABLE Est_Historico(
     fk_ef_id        INTEGER,
     CONSTRAINT PK_Est_Historico PRIMARY KEY (eh_clave),
     CONSTRAINT FK_eh_ov_numero FOREIGN KEY (fk_ov_numero)
-    REFERENCES Orden_Venta (ov_numero),
+    REFERENCES Orden_Venta (ov_numero) ON DELETE CASCADE,
     CONSTRAINT FK_eh_ma_id FOREIGN KEY (fk_ma_id)
-    REFERENCES Min_Alm (ma_id),
+    REFERENCES Min_Alm (ma_id) ON DELETE CASCADE,
     CONSTRAINT FK_eh_oc_numero FOREIGN KEY (fk_oc_numero)
-    REFERENCES Orden_Compra (oc_numero),
+    REFERENCES Orden_Compra (oc_numero) ON DELETE CASCADE,
     CONSTRAINT FK_eh_fm_id FOREIGN KEY (fk_fm_id)
-    REFERENCES Fase_Maq (fm_id),
+    REFERENCES Fase_Maq (fm_id) ON DELETE CASCADE,
     CONSTRAINT FK_eh_ex_id FOREIGN KEY (fk_ex_id)
-    REFERENCES Explotacion (ex_id),
+    REFERENCES Explotacion (ex_id) ON DELETE CASCADE,
     CONSTRAINT FK_eh_eta_id FOREIGN KEY (fk_eta_id)
-    REFERENCES Etapa (eta_id),
+    REFERENCES Etapa (eta_id) ON DELETE CASCADE,
     CONSTRAINT FK_eh_f_id FOREIGN KEY (fk_f_id)
-    REFERENCES Fase (f_id),
+    REFERENCES Fase (f_id) ON DELETE CASCADE,
     CONSTRAINT FK_eh_ef_id FOREIGN KEY (fk_ef_id)
-    REFERENCES Emp_Fase (ef_id)
+    REFERENCES Emp_Fase (ef_id) ON DELETE CASCADE
 );
